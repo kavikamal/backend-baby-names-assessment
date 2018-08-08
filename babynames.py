@@ -44,6 +44,7 @@ def extract_names(filename):
   file = open(filename, 'r')
   content=file.read() 
   result = []
+  year=''
   year_object=re.search(r'Popularity\sin\s(\d\d\d\d)', content)
   if year_object:
      year = year_object.group()[-4:]
