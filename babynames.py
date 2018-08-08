@@ -41,6 +41,26 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
+  file = open(filename, 'r')
+  content=file.read() 
+  result = []
+  year_object=re.search(r'Popularity\sin\s(\d\d\d\d)', content)
+  if year_object:
+     year = year_object.group()[-4:]
+  result.append(year) 
+  names_ranks = re.findall(r'<td>(\d+)</td><td>(\w+)</td>\<td>(\w+)</td>', content)
+  name_rank_dict={} 
+  for name_rank in names_ranks:
+       name_rank_dict[name_rank[1]]= name_rank[0]
+  sd = sorted(name_rank_dict.items())
+  for name,rank in sd:
+    result.append(name+' '+rank) 
+  text = '\n'.join(result) + '\n'  
+  if summary:
+    output_file = open(filename + ".summary", "w")
+    output_file.write(text)
+  else:
+    print text
   return
 
 
@@ -49,20 +69,23 @@ def main():
   # Make a list of command line arguments, omitting the [0] element
   # which is the script itself.
   args = sys.argv[1:]
-
+  print args
   if not args:
     print 'usage: [--summaryfile] file [file ...]'
     sys.exit(1)
 
   # Notice the summary flag and remove it from args if it is present.
+  global summary
   summary = False
   if args[0] == '--summaryfile':
     summary = True
     del args[0]
-
+  print args 
   # +++your code here+++
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
+  extract_names(args[0])
+
   
 if __name__ == '__main__':
   main()
